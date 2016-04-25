@@ -25,8 +25,6 @@ public class MyPriorityQueue<E> implements MyPriorityQueueInt<E>{
     private ArrayList<E> theData;
     /** An optional reference to a Comparator object. */
     private Comparator<E> comparator = null;
-    /** number of Day */
-    private int numberOfReport;
 
     /**
      * One parameter Constructor
@@ -36,7 +34,6 @@ public class MyPriorityQueue<E> implements MyPriorityQueueInt<E>{
     public MyPriorityQueue(Comparator<E> newComparator){
         setTheData();
         setComparator(newComparator);
-        setNumberOfReport(0);
     }//end of the One parameter Constructor
 
     /**
@@ -66,20 +63,6 @@ public class MyPriorityQueue<E> implements MyPriorityQueueInt<E>{
     private void setComparator(Comparator<E> newComparator) {
         this.comparator = newComparator;
     }
-
-    /**
-     * Get Number Of Report
-     *
-     * @return Number Of Report
-     */
-    private int getNumberOfReport() { return numberOfReport; }
-
-    /**
-     * Set Number Of Report
-     *
-     * @param newNumberOfReport
-     */
-    private void setNumberOfReport(int newNumberOfReport) { this.numberOfReport = newNumberOfReport; }
 
     /**
      * Insert an item into the priority queue.

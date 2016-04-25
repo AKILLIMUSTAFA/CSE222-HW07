@@ -167,6 +167,11 @@ public class TestScenario
                 System.out.println("Silver Customer: " + silverCustomerNumber);
                 System.out.println("Bronz Customer: " + bronzCustomerNumber);
 
+                /* Reset */
+                goldenCustomerNumber = 0;
+                silverCustomerNumber = 0;
+                bronzCustomerNumber = 0;
+
                 /* Print starts */
                 System.out.println("\n************************************************\n");
             }
