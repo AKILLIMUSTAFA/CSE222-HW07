@@ -1,0 +1,10 @@
+Arrival Time       		Transaction Duration         			Customer Type (Random sequence)
+00 30                           10                                              customer 1
+00 35                           05                                              customer 2
+00 40                           08                                              customer 3
+00 45                           02                                              customer 1
+00 35                           05                                              customer 1
+00 50                           05                                              customer 1
+00 55                           12                                              customer 3
+01 00                           13                                              customer 2
+01 01                           09                                              customer 2
