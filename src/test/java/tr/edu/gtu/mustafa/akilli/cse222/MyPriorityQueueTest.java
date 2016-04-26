@@ -29,21 +29,21 @@ public class MyPriorityQueueTest extends TestCase {
         myPriorityQueue.enqueue(secondCustomer);
         myPriorityQueue.enqueue(thirdCustomer);
 
-        if (35 == myPriorityQueue.dequeue().getArrivalTime())
+        if (1 == myPriorityQueue.dequeue().getCustomerType())
             result = true;
         else
             result = false;
 
         assertEquals(true, result);
 
-        if (45 == myPriorityQueue.dequeue().getArrivalTime())
+        if (2 == myPriorityQueue.dequeue().getCustomerType())
             result = true;
         else
             result = false;
 
         assertEquals(true, result);
 
-        if (40 == myPriorityQueue.dequeue().getArrivalTime())
+        if (3 == myPriorityQueue.dequeue().getCustomerType())
             result = true;
         else
             result = false;
@@ -60,10 +60,12 @@ public class MyPriorityQueueTest extends TestCase {
         Customer firstCustomer = new Customer(20, 7, 3, 0);
         Customer secondCustomer = new Customer(26, 20, 1, 0);
         Customer thirdCustomer = new Customer(23, 6, 2, 0);
+        Customer fourthCustomer = new Customer(23, 7, 2, 0);
 
         myPriorityQueue.enqueue(firstCustomer);
         myPriorityQueue.enqueue(secondCustomer);
         myPriorityQueue.enqueue(thirdCustomer);
+        myPriorityQueue.enqueue(fourthCustomer);
 
         if (1 == myPriorityQueue.dequeue().getCustomerType())
             result = true;
@@ -72,7 +74,14 @@ public class MyPriorityQueueTest extends TestCase {
 
         assertEquals(true, result);
 
-        if (2 == myPriorityQueue.dequeue().getCustomerType())
+        if (6 == myPriorityQueue.dequeue().getTransactionDuration())
+            result = true;
+        else
+            result = false;
+
+        assertEquals(true, result);
+
+        if (7 == myPriorityQueue.dequeue().getTransactionDuration())
             result = true;
         else
             result = false;

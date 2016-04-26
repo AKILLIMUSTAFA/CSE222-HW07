@@ -31,32 +31,26 @@ public class CustomerComparator implements Comparator<Customer> {
         if(leftCustomer == null || rightCustomer == null)
             throw new NullPointerException();
 
-        /* If left Customer type priority than right Customer return positive integer */
-        if(rightCustomer.getCustomerType() < leftCustomer.getCustomerType())
-            if((rightCustomer.getArrivalTime()) -
-                    (leftCustomer.getArrivalTime()+leftCustomer.getTransactionDuration()) != 0)
-                return  (rightCustomer.getArrivalTime()) -
-                    (leftCustomer.getArrivalTime()+leftCustomer.getTransactionDuration());
+        /* If left Customer type priority equal right Customer type */
+        if(leftCustomer.getCustomerType() == rightCustomer.getCustomerType()){
 
-            else
-                return rightCustomer.getCustomerType() - leftCustomer.getCustomerType();
+            /* If left Customer ArrivalTime priority equal right Customer ArrivalTime */
+            if(leftCustomer.getArrivalTime() == rightCustomer.getArrivalTime()){
 
-        /* If left Customer type priority than right Customer return positive integer */
-        if(leftCustomer.getCustomerType() < rightCustomer.getCustomerType())
-            if((rightCustomer.getArrivalTime()+rightCustomer.getTransactionDuration()) - (leftCustomer.getArrivalTime()) != 0)
-                return  (rightCustomer.getArrivalTime()+rightCustomer.getTransactionDuration()) - (leftCustomer.getArrivalTime());
+                /* If left Customer TransactionDuration priority equal right Customer TransactionDuration */
+                if(leftCustomer.getTransactionDuration() == rightCustomer.getTransactionDuration())
+                    return 0;
 
-            else
-                return rightCustomer.getCustomerType() - leftCustomer.getCustomerType();
+                else/* If left Customer TransactionDuration priority than right Customer TransactionDuration return positive integer otherwise return negative*/
+                    return rightCustomer.getTransactionDuration() - leftCustomer.getTransactionDuration();
 
-        /* If left Customer type equal to right Customer*/
-        else {
-            if((rightCustomer.getArrivalTime()+rightCustomer.getTransactionDuration()) -
-                    (leftCustomer.getArrivalTime()+leftCustomer.getTransactionDuration()) != 0)
-                return (rightCustomer.getArrivalTime()+rightCustomer.getTransactionDuration()) -
-                        (leftCustomer.getArrivalTime()+leftCustomer.getTransactionDuration());
-            else
-                return rightCustomer.getArrivalTime() - leftCustomer.getArrivalTime();
+            }
+
+            else/* If left Customer Arrival Time priority than right Customer Arrival Time return positive integer otherwise return negative*/
+                return rightCustomer.getArrivalTime() - leftCustomer.getCustomerType();
         }
+
+        else /* If left Customer type priority than right Customer return positive integer otherwise return negative*/
+            return rightCustomer.getCustomerType() - leftCustomer.getCustomerType();
     }
 }

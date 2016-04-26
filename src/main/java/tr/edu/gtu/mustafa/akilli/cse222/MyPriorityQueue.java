@@ -25,6 +25,9 @@ public class MyPriorityQueue<E> implements MyPriorityQueueInt<E>{
     private ArrayList<E> theData;
     /** An optional reference to a Comparator object. */
     private Comparator<E> comparator = null;
+    /** Size Of The Data */
+    private int sizeOfTheData;
+    private static final int START_SIZE = 0;
 
     /**
      * One parameter Constructor
@@ -34,6 +37,7 @@ public class MyPriorityQueue<E> implements MyPriorityQueueInt<E>{
     public MyPriorityQueue(Comparator<E> newComparator){
         setTheData();
         setComparator(newComparator);
+        setSizeOfTheData(START_SIZE);
     }//end of the One parameter Constructor
 
     /**
@@ -65,6 +69,24 @@ public class MyPriorityQueue<E> implements MyPriorityQueueInt<E>{
     }
 
     /**
+     * Get Size Of The Data
+     *
+     * @return sizeOfTheData
+     */
+    public int getSizeOfTheData() {
+        return sizeOfTheData;
+    }
+
+    /**
+     * Set Size Of The Data
+     *
+     * @param newSizeOfTheData
+     */
+    public void setSizeOfTheData(int newSizeOfTheData) {
+        this.sizeOfTheData = newSizeOfTheData;
+    }
+
+    /**
      * Insert an item into the priority queue.
      *
      * @param item The item to be inserted
@@ -80,19 +102,27 @@ public class MyPriorityQueue<E> implements MyPriorityQueueInt<E>{
             throw new NullPointerException();
         }
 
-        // Add the item to the ArrayList.
-        getTheData().add(item);
-        // child is newly inserted item.
-        int child =  size() - 1;
-        int parent = (child - 1) / 2; // Find child's parent.
+        /* Make a flag */
+        boolean flag = false;
 
+        /* Add element appropriate in the array */
+        for(int index = 0 ; index < size() && flag == false ;++index)
+            if(compare(getTheData().get(index),item) < 0){
+                getTheData().add(index,item);
+                flag=true;
+                setSizeOfTheData(getSizeOfTheData()+1);
+            }
 
-        while (parent >= 0 && compare(getTheData().get(parent),
-                getTheData().get(child)) < 0) {
-            swap(parent, child);
-            child = parent;
-            parent = (child - 1) / 2;
+        /* Add element en of the array */
+        if(flag == false) {
+            if (getTheData().add(item) == true) {
+                flag = true;
+                setSizeOfTheData(getSizeOfTheData() + 1);
+            } else
+                return false;
         }
+
+        /* return result */
         return true;
     }
 
@@ -104,44 +134,13 @@ public class MyPriorityQueue<E> implements MyPriorityQueueInt<E>{
      * post Removed smallest item, theData is in heap order.
      */
     public E dequeue() {
+        //if the array is empty.
         if (isEmpty()) {
             return null;
         }
-        // Save the top of the ArrayList.
-        E result = getTheData().get(0);
-        // If only one item then remove it.
-        if (getTheData().size() == 1) {
-            getTheData().remove(0);
-            return result;
-        }
-        // Remove the last item from the ArrayList and place it into
-        // the first position.
-        getTheData().set(0, getTheData().remove(getTheData().size() - 1));
-        // The parent starts at the top.
-        int parent = 0;
-        while (true) {
-            int leftChild = 2 * parent + 1;
-            if (leftChild >= getTheData().size()) {
-                break; // Out of heap.
-            }
-            int rightChild = leftChild + 1;
-            int minChild = leftChild; // Assume leftChild is smaller.
-            // See whether rightChild is smaller.
-            if (rightChild < getTheData().size() && compare(getTheData().get(leftChild),
-                    getTheData().get(rightChild)) < 0) {
-                minChild = rightChild;
-            }
-            // assert: minChild is the index of the smaller child.
-            // Move smaller child up heap if necessary.
-            if (compare(getTheData().get(parent),
-                    getTheData().get(minChild)) < 0) {
-                swap(parent, minChild);
-                parent = minChild;
-            } else { // Heap property is restored.
-                break;
-            }
-        }
-        return result;
+
+        /* Return the remove element */
+        return getTheData().remove(0);
     }
 
     /**
@@ -179,17 +178,5 @@ public class MyPriorityQueue<E> implements MyPriorityQueueInt<E>{
         } else { // Use left's compareTo method.
             return ((Comparable<E>) left).compareTo(right);
         }
-    }
-
-    /**
-     * Swap left Value and Right value
-     *
-     * @param parent of child
-     * @param child of parent
-     */
-    private void swap(int parent, int child){
-        E temp = getTheData().get(child);
-        getTheData().set(child,getTheData().get(parent));
-        getTheData().set(parent,temp);
     }
 }
