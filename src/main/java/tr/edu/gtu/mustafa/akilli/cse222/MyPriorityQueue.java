@@ -179,4 +179,15 @@ public class MyPriorityQueue<E> implements MyPriorityQueueInt<E>{
             return ((Comparable<E>) left).compareTo(right);
         }
     }
+
+
+    /**
+     * Print all Element
+     */
+    public void printAllElement() {
+
+        for (int index =0; index < getTheData().size() ;++index){
+            System.out.println(getTheData().get(index).toString());
+        }
+    }
 }

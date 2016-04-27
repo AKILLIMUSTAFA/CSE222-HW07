@@ -21,7 +21,7 @@ import java.util.Scanner;
 public class CustomerPriorityQueue {
 
     /* Priority Queue to hold the data */
-    private MyPriorityQueue<Customer> priorityQueue;
+    private MyPriorityQueue<Customer> customerPriorityQueue;
     /* Data File Name */
     private String dataFileName;
     /* An optional reference to a Comparator object. */
@@ -41,6 +41,8 @@ public class CustomerPriorityQueue {
 
     private static final int TWENTY_HOUR = 1200;
     private static final int START_CUSTOMER_NUMBER = 0;
+
+    private Customer customersInProcess;
 
     /**
      * Two Parameter Constructor for CustomerPriorityQueue
@@ -64,14 +66,14 @@ public class CustomerPriorityQueue {
      * @return priorityQueue
      */
     private MyPriorityQueue getPriorityQueue() {
-        return priorityQueue;
+        return customerPriorityQueue;
     }
 
     /**
      * Set Priority Queue
      */
     private void setPriorityQueue(Comparator<Customer> newComparator) {
-        this.priorityQueue = new MyPriorityQueue(newComparator);
+        this.customerPriorityQueue = new MyPriorityQueue(newComparator);
     }
 
     /**
@@ -199,15 +201,31 @@ public class CustomerPriorityQueue {
     }
 
     /**
+     * Get Customers In Process
+     *
+     * @return Customers In Process
+     */
+    public Customer getCustomersInProcess() {
+        return customersInProcess;
+    }
+
+    /**
+     * Set Customers In Process
+     *
+     * @param newCustomersInProcess
+     */
+    public void setCustomersInProcess(Customer newCustomersInProcess) {
+        this.customersInProcess = newCustomersInProcess;
+    }
+
+    /**
      * Take the data file and handle it.
      *
      * @throws FileNotFoundException
      */
     public void startTheQueue() throws FileNotFoundException {
 
-        /*Make a new Priority Queue for Customer */
-        MyPriorityQueue<Customer> customerPriorityQueue = new MyPriorityQueue<Customer>(new CustomerComparator());
-
+        /*Make a tempCustomer */
         Customer tempCustomer;
 
         File inFile = new File(getDataFileName()); /* Txt */
@@ -237,8 +255,19 @@ public class CustomerPriorityQueue {
                         currentTransactionDurationMinute,currentCustomerType,0);
                 /* Add element in the Served Customers List */
                 getServedCustomersList().add(tempCustomer);
+
+                /*Set Customer in Process */
+                setCustomersInProcess(tempCustomer);
                 /* Set Old Time */
                 setOldTime(currentTime);
+
+                /* İncrease appropriate number */
+                switch (tempCustomer.getCustomerType()){
+                    case 1: setGoldenCustomerNumber(getGoldenCustomerNumber()+1);break;
+                    case 2: setSilverCustomerNumber(getSilverCustomerNumber()+1);break;
+                    case 3: setBronzCustomerNumber(getBronzCustomerNumber()+1);break;
+                }
+
                 firstCustomer = false;
             } else {
 
@@ -249,22 +278,44 @@ public class CustomerPriorityQueue {
                 mergeTheString(line);
 
                 /* İf process not continuation */
-                if (currentTime < (currentArrivalTimeHour * 60 + currentArrivalTimeMinute))
-                    if ((tempCustomer = customerPriorityQueue.dequeue()) != null){
-                        currentTime = (tempCustomer.getArrivalTime()) + tempCustomer.getTransactionDuration();
-                        getServedCustomersList().add(tempCustomer);
+                if (currentTime < (currentArrivalTimeHour * 60 + currentArrivalTimeMinute)){
+                    setCustomersInProcess(customerPriorityQueue.dequeue());
+                    if (getCustomersInProcess() != null){
+                        currentTime += getCustomersInProcess().getTransactionDuration();
+                        getServedCustomersList().add(getCustomersInProcess());
                     }
+
+                    /* İncrease appropriate number */
+                    switch (getCustomersInProcess().getCustomerType()){
+                        case 1: setGoldenCustomerNumber(getGoldenCustomerNumber()+1);break;
+                        case 2: setSilverCustomerNumber(getSilverCustomerNumber()+1);break;
+                        case 3: setBronzCustomerNumber(getBronzCustomerNumber()+1);break;
+                    }
+                }
 
                 /* Add element in the queue */
                 customerPriorityQueue.enqueue(new Customer(currentArrivalTimeHour * 60 + currentArrivalTimeMinute,
                         currentTransactionDurationMinute, currentCustomerType, 0));
+
             }
+
+            /* Print The Current Status */
+            printCurrentStatus();
         }
 
         /* Dequeue all rest of elements */
         while ((tempCustomer = customerPriorityQueue.dequeue()) != null){
+            setCustomersInProcess(tempCustomer);
             getServedCustomersList().add(tempCustomer);
+
+            /* Print The Current Status */
+            printCurrentStatus();
         }
+
+        setCustomersInProcess(null);
+
+        /* Print The Current Status */
+        printCurrentStatus();
 
         /* Close the file */
         sc.close();
@@ -319,19 +370,19 @@ public class CustomerPriorityQueue {
         /* İf TWENTY_HOUR past */
         if(currentTime - getOldTime() >= TWENTY_HOUR ){
 
-            System.out.println("\nTest For Data 2\n");
+            /*System.out.println("\nTest For Data 2\n");
 
-            /* Print The Array */
+             Print The Array
             for (int index =0; index < getServedCustomersList().size() ;++index){
                 System.out.println(getServedCustomersList().get(index).toString());
                 increaseCustomerNumber(getServedCustomersList().get(index).getCustomerType());
-            }
+            }*/
 
-            System.out.println("*****************************************************");
+            System.out.println("\n*****************************************************");
             System.out.println("Golden Customer Number: " + getGoldenCustomerNumber());
             System.out.println("Silver Customer Number: " + getSilverCustomerNumber());
             System.out.println("Bronz Customer Number: " + getBronzCustomerNumber());
-            System.out.println("*****************************************************");
+            System.out.println("*****************************************************\n");
 
             /* Delete All Array */
             getServedCustomersList().clear();
@@ -363,5 +414,23 @@ public class CustomerPriorityQueue {
         for (int index =0; index < getServedCustomersList().size() ;++index){
             System.out.println(getServedCustomersList().get(index).toString());
         }
+    }
+
+
+    /**
+     * Print Current Status
+     */
+    public void printCurrentStatus(){
+
+        System.out.println("\nCustomer in Current: ");
+        if(getCustomersInProcess() != null)
+            System.out.println(getCustomersInProcess().toString());
+        else
+            System.out.println("Nobody");
+        System.out.println("Customers who waiting: ");
+        if(getPriorityQueue().size() != 0)
+            getPriorityQueue().printAllElement();
+        else
+            System.out.println("Nobody");
     }
 }
