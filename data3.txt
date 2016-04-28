@@ -1,5 +1,0 @@
-Arrival Time       		Transaction Duration         			Customer Type (Random sequence)
-00 30                           13                                              customer 1
-00 35                           01                                              customer 3
-00 40                           20                                              customer 1
-00 45                           20                                              customer 1
